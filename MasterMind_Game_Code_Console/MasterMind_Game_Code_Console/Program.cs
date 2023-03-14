@@ -11,6 +11,80 @@ namespace MasterMind_Game_Code_Console
     {
         static void Main(string[] args)
         {
+            string Breakername;
+            string User;
+            int[] MakerArray = new int[4];
+            int[] BreakerArray = new int[4];
+
+            do
+            {
+                Console.Clear();
+
+                CodeMakerInput(MakerArray);
+
+                Console.Clear();
+                Console.WriteLine("Welcome To The Master-Mind Game");
+                Console.WriteLine();
+                Console.WriteLine("The Code Maker Already Sets the Code For you");
+                Console.WriteLine();
+                Console.Write("Lets begin the game once you enter your name Code Breaker : ");
+                Breakername = Console.ReadLine();
+                Console.WriteLine();
+                Console.WriteLine("Welcome {0}. Lets begin to crack the Code...", Breakername);
+                Console.WriteLine();
+
+                int difficultyLevel = 0;
+
+                int difficulty = GetGameDifficulty(difficultyLevel);
+                int attempts = difficulty * 4;
+
+                Console.WriteLine("Enter your guess ({0} guesses remaining)", attempts);
+                int remaining = attempts;
+
+                for (int i = 1; i <= attempts; i++)
+                {
+                    Console.WriteLine();
+                    BreakerArray = GetUserGuess();
+                    int hits = CountHits(MakerArray, BreakerArray, attempts);
+                    Console.WriteLine();
+
+                    if ((hits != MakerArray.Length) && (remaining > 1))
+                    {
+                        remaining--;
+                        Console.WriteLine();
+                        Console.WriteLine("Enter your guess ({0} guesses remaining)", remaining);
+                        Console.WriteLine();
+                    }
+                    else if (hits == MakerArray.Length && remaining >= 1)
+                    {
+                        attempts = 0;
+                        Console.WriteLine("You win {0}!", Breakername);
+                        Console.WriteLine();
+                        Console.WriteLine("The correct number is:");
+                        for (int j = 0; j < MakerArray.Length; j++)
+                        {
+                            Console.Write(MakerArray[j] + " ");
+                        }
+                    }
+                    else if (remaining <= 1)
+                    {
+                        Console.WriteLine("Oh no {0}! You couldn't guess the right number.", Breakername);
+                        Console.WriteLine("The correct number is: ");
+                        for (int j = 0; j < MakerArray.Length; j++)
+                        {
+                            Console.Write(MakerArray[j] + " ");
+                        }
+                    }
+                }
+                Console.WriteLine();
+                Console.ReadLine(); Console.WriteLine("If You Want To Continue, Type Y");
+                string temp = (Console.ReadLine());
+                User = temp;
+                User = User.ToUpper();
+                Console.WriteLine();
+
+            } while (User == "Y");
+
         }
 
         public static void CodeMakerInput(int[] MakerArray)
@@ -102,7 +176,12 @@ namespace MasterMind_Game_Code_Console
                     miss = miss + 1;
                 }
             }
+            Console.WriteLine();
             Console.WriteLine("Results: {0} Red Pin and {1} White Pin", hits, miss);
+            Console.WriteLine();
+            Console.WriteLine(" Hint : Red Pin Means 'Correct Number in Correct Position' ");
+            Console.WriteLine(" Hint : White Pin Means 'Correct Number in Wrong Position' ");
+            Console.WriteLine();
             return hits;
         }
     }
